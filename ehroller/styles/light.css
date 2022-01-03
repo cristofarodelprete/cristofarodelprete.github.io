@@ -1,0 +1,10 @@
+:root {
+	--body-background-color: #eee;
+	--body-foreground-color: #111;
+	--box-shadow-color: #ccc;
+	--main-background-color: #fff;
+	--component-border-color: #999;
+	--component-background-color: #fff;
+	--primary-color: #06c;
+	--primary-text-color: #eee;
+}

@@ -1,0 +1,44 @@
+div.tabs {
+	position: relative;
+	display: flex;
+	flex-direction: row;
+	padding: 2px 2px 0;
+	margin: calc(0.5em - 2px);
+	margin-bottom: -2px;
+	overflow: hidden;
+}
+
+div.tabs::after {
+	content: "";
+	position: absolute;
+	height: 2px;
+	left: 2px;
+	right: 2px;
+	bottom: -2px;
+	background-color: var(--component-background-color);
+	box-shadow: var(--box-shadow-color) 0px -1px 2px;
+}
+
+div.tabs + * {
+	margin-top: 0;
+}
+
+div.tabs > button {
+	display: inline-block;
+	padding: 0.5em 0.8em;
+	background-color: var(--component-background-color);
+	box-shadow: var(--box-shadow-color) 0px 1px 2px;
+    border-radius: 0.5em 0.5em 0 0;
+	color: var(--primary-color);
+	font-family: "Roboto";
+	font-size: 14pt;
+	margin: 0;
+}
+
+div.tabs > button.active {
+	background-color: var(--primary-color);
+	color: var(--primary-text-color);
+	padding-bottom: calc(0.5em + 2px);
+	margin-bottom: -2px;
+	z-index: 99;
+}

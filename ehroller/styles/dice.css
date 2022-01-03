@@ -1,0 +1,100 @@
+.die {
+	display: inline-block;
+	margin: 1em;
+	width: 2em;
+	height: 2em;
+	border-radius: 0.2em;
+	background-color: #ffe;
+	color: #222;
+	background-repeat: no-repeat;
+	box-shadow: var(--box-shadow-color) 0px 1px 2px 1px;
+	padding: 0;
+}
+
+.die[rnd="1"] { transform: rotate(1deg); }
+.die[rnd="2"] { transform: rotate(2deg); }
+.die[rnd="3"] { transform: rotate(3deg); }
+.die[rnd="4"] { transform: rotate(4deg); }
+.die[rnd="5"] { transform: rotate(5deg); }
+.die[rnd="6"] { transform: rotate(6deg); }
+.die[rnd="7"] { transform: rotate(7deg); }
+.die[rnd="8"] { transform: rotate(8deg); }
+.die[rnd="9"] { transform: rotate(9deg); }
+.die[rnd="10"] { transform: rotate(10deg); }
+.die[rnd="11"] { transform: rotate(11deg); }
+.die[rnd="12"] { transform: rotate(12deg); }
+.die[rnd="13"] { transform: rotate(13deg); }
+.die[rnd="14"] { transform: rotate(14deg); }
+.die[rnd="15"] { transform: rotate(15deg); }
+.die[rnd="16"] { transform: rotate(-1deg); }
+.die[rnd="17"] { transform: rotate(-2deg); }
+.die[rnd="18"] { transform: rotate(-3deg); }
+.die[rnd="19"] { transform: rotate(-4deg); }
+.die[rnd="20"] { transform: rotate(-5deg); }
+.die[rnd="21"] { transform: rotate(-6deg); }
+.die[rnd="22"] { transform: rotate(-7deg); }
+.die[rnd="23"] { transform: rotate(-8deg); }
+.die[rnd="24"] { transform: rotate(-9deg); }
+.die[rnd="25"] { transform: rotate(-10deg); }
+.die[rnd="26"] { transform: rotate(-11deg); }
+.die[rnd="27"] { transform: rotate(-12deg); }
+.die[rnd="28"] { transform: rotate(-13deg); }
+.die[rnd="29"] { transform: rotate(-14deg); }
+.die[rnd="30"] { transform: rotate(-15deg); }
+
+
+
+.die.success {
+	color: #040;
+	background-color: #dfd;	
+}
+
+.die.failure {
+	color: #400;
+	background-color: #fdd;	
+}
+
+.die[value="1"] {
+	background-image:
+		radial-gradient(circle closest-side at 50% 50%, currentColor 0, currentColor 20%, transparent calc(20% + 0.5px));
+}
+
+.die[value="2"] {
+	background-image:
+		radial-gradient(circle closest-side at 20% 20%, currentColor 0, currentColor 50%, transparent calc(50% + 0.5px)),
+		radial-gradient(circle closest-side at 80% 80%, currentColor 0, currentColor 50%, transparent calc(50% + 0.5px));
+}
+
+.die[value="3"] {
+	background-image:
+		radial-gradient(circle closest-side at 20% 20%, currentColor 0, currentColor 50%, transparent calc(50% + 0.5px)),
+		radial-gradient(circle closest-side at 50% 50%, currentColor 0, currentColor 20%, transparent calc(20% + 0.5px)),
+		radial-gradient(circle closest-side at 80% 80%, currentColor 0, currentColor 50%, transparent calc(50% + 0.5px));
+}
+
+.die[value="4"] {
+	background-image:
+		radial-gradient(circle closest-side at 20% 20%, currentColor 0, currentColor 50%, transparent calc(50% + 0.5px)),
+		radial-gradient(circle closest-side at 80% 20%, currentColor 0, currentColor 50%, transparent calc(50% + 0.5px)),
+		radial-gradient(circle closest-side at 20% 80%, currentColor 0, currentColor 50%, transparent calc(50% + 0.5px)),
+		radial-gradient(circle closest-side at 80% 80%, currentColor 0, currentColor 50%, transparent calc(50% + 0.5px));
+}
+
+.die[value="5"] {
+	background-image:
+		radial-gradient(circle closest-side at 20% 20%, currentColor 0, currentColor 50%, transparent calc(50% + 0.5px)),
+		radial-gradient(circle closest-side at 80% 20%, currentColor 0, currentColor 50%, transparent calc(50% + 0.5px)),
+		radial-gradient(circle closest-side at 50% 50%, currentColor 0, currentColor 20%, transparent calc(20% + 0.5px)),
+		radial-gradient(circle closest-side at 20% 80%, currentColor 0, currentColor 50%, transparent calc(50% + 0.5px)),
+		radial-gradient(circle closest-side at 80% 80%, currentColor 0, currentColor 50%, transparent calc(50% + 0.5px));
+}
+
+.die[value="6"] {
+	background-image:
+		radial-gradient(circle closest-side at 20% 20%, currentColor 0, currentColor 50%, transparent calc(50% + 0.5px)),
+		radial-gradient(circle closest-side at 80% 20%, currentColor 0, currentColor 50%, transparent calc(50% + 0.5px)),
+		radial-gradient(circle closest-side at 20% 50%, currentColor 0, currentColor 50%, transparent calc(50% + 0.5px)),
+		radial-gradient(circle closest-side at 80% 50%, currentColor 0, currentColor 50%, transparent calc(50% + 0.5px)),
+		radial-gradient(circle closest-side at 20% 80%, currentColor 0, currentColor 50%, transparent calc(50% + 0.5px)),
+		radial-gradient(circle closest-side at 80% 80%, currentColor 0, currentColor 50%, transparent calc(50% + 0.5px));
+}

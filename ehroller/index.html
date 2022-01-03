@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html id="app">
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>{{ messages[lang].title }}</title>
+	<link type="text/css" href="styles/main.css" rel="stylesheet" />
+	<script type="text/javascript" src="lib/vue.min.js"></script>
+</head>
+<body>
+	<header class="row">
+		<h1 class="left">{{ messages[lang].title }}</h1>
+	</header>
+	<main :class="{ 'color-violet': stat == 'lore', 'color-orange': stat == 'influence', 'color-green': stat == 'observation', 'color-red': stat == 'strength', 'color-blue': stat == 'will' }">
+		<section>
+			<div class="tabs center justify">
+				<button type="button" @click="stat = 'lore'" :class="{ active: stat == 'lore' }"><i>lore</i></button>
+				<button type="button" @click="stat = 'influence'" :class="{ active: stat == 'influence' }"><i>influence</i></button>
+				<button type="button" @click="stat = 'observation'" :class="{ active: stat == 'observation' }"><i>observation</i></button>
+				<button type="button" @click="stat = 'strength'" :class="{ active: stat == 'strength' }"><i>strength</i></button>
+				<button type="button" @click="stat = 'will'" :class="{ active: stat == 'will' }"><i>will</i></button>
+			</div>
+			<article>
+				<section><h2 class="center">{{ messages[lang].stats[stat] }}</h2></section>
+				<section class="row space-between">
+					<strong>{{ messages[lang].baseValue }}</strong>
+					<span class="row align-middle">
+						<button type="button" class="round minus" @click="stats[stat].base--" :disabled="stats[stat].base <= 1"></button>
+						<span class="field">{{ stats[stat].base }}</span>
+						<button type="button" class="round plus" @click="stats[stat].base++" :disabled="stats[stat].base >= 4"></button>
+					</span>
+				</section>
+				<section class="row space-between">
+					<strong>{{ messages[lang].improvement }}</strong>
+					<span class="row align-middle">
+						<button type="button" class="round minus" @click="stats[stat].improvement--" :disabled="stats[stat].improvement <= -2"></button>
+						<span class="field">{{ stats[stat].improvement }}</span>
+						<button type="button" class="round plus" @click="stats[stat].improvement++" :disabled="stats[stat].improvement >= 2"></button>
+					</span>
+				</section>
+				<section class="row space-between">
+					<strong>{{ settings.combat ? messages[lang].combatBonus : messages[lang].bonus }}</strong>
+					<span class="row align-middle">
+						<button type="button" class="round minus" @click="stats[stat][settings.combat ? 'combat' : 'bonus']--" :disabled="stats[stat][settings.combat ? 'combat' : 'bonus'] <= 0"></button>
+						<span class="field">{{ settings.combat ? stats[stat].combat : stats[stat].bonus }}</span>
+						<button type="button" class="round plus" @click="stats[stat][settings.combat ? 'combat' : 'bonus']++"></button>
+					</span>
+				</section>
+			</article>
+			<article>
+				<section class="row space-between">
+					<strong>{{ messages[lang].modifier }}</strong>
+					<span class="row align-middle">
+						<button type="button" class="round minus" @click="modifier--"></button>
+						<span class="field">{{ modifier }}</span>
+						<button type="button" class="round plus" @click="modifier++"></button>
+						&nbsp;
+						<button type="button" class="round times" @click="modifier = 0"></button>
+					</span>
+				</section>
+				<section>
+					<label class="row space-between">
+						<strong>{{ messages[lang].successMode.label }}</strong>
+						<select v-model="settings.successes">
+							<option :value="[ 5, 6 ]">{{ messages[lang].successMode.normal }}</option>
+							<option :value="[ 4, 5, 6 ]">{{ messages[lang].successMode.blessed }}</option>
+							<option :value="[ 6 ]">{{ messages[lang].successMode.cursed }}</option>
+						</select>
+					</label>
+				</section>
+				<section>
+					<strong><label><input type="checkbox" v-model="settings.combat" /> {{ messages[lang].combatMode }}</label></strong>
+				</section>
+				<section>
+					<strong><label><input type="checkbox" v-model="settings.sixes" /> {{ messages[lang].sixesCountDouble }}</label></strong>
+				</section>
+				<section>
+					<strong><label><input type="checkbox" v-model="settings.ones" /> {{ messages[lang].onesCancelSuccesses }}</label></strong>
+				</section>
+			</article>
+			<article v-if="dice.length > 0">
+				<section class="row wrap center">
+					<button v-for="(die, index) in dice" class="die" :class="{ failure: (settings.ones ? die.value == 1 : false), success: settings.successes.indexOf(die.value) >= 0 }" :value="die.value" :rnd="die.rnd" @click="reroll(index)"></button>
+				</section>
+				<section class="center">
+					<h2>{{ result }}</h2>
+				</section>
+			</article>
+			<section class="center">
+				<button type="button" class="large" @click="roll()">{{ messages[lang].roll }}</button>
+				<button type="button" class="large" @click="clear()">{{ messages[lang].clear }}</button>
+			</section>
+		</section>
+	</main>
+</body>
+<script type="text/javascript" src="scripts/main.js"></script>
+</html>

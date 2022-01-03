@@ -1,0 +1,216 @@
+@import url('ehicons.css');
+@import url('roboto.css');
+@import url('light.css');
+@import url('print.css') print;
+@import url('dark.css') screen and (prefers-color-scheme: dark);
+@import url('switch.css');
+@import url('tabs.css');
+@import url('dice.css');
+
+body {
+	display: flex;
+	flex-direction: column;
+	margin: 0;
+	font-family: "Roboto";
+	background-color: var(--body-background-color);
+	color: var(--body-foreground-color);
+}
+
+*:disabled {
+	filter: saturate(0%);
+}
+
+h1, h2, h3, h4, h5, h6 {
+	margin: 0;
+}
+
+body > header {
+	padding: 0.2em 0.5em;
+	position: sticky;
+	top: 0;
+	background-color: var(--body-background-color);
+	text-align: center;
+	box-shadow: var(--box-shadow-color) 0px 1px 3px;
+}
+
+body > footer {
+	padding: 0.2em 0.5em;
+	position: sticky;
+	bottom: 0;
+	background-color: var(--body-background-color);
+	text-align: center;
+	border-top: solid thin var(--component-border-color);
+}
+
+section {
+	margin: 0.5em;
+}
+
+section + section {
+	margin-top: 0;
+}
+
+article {
+	padding: 0.8em;
+	margin: 0.5em;
+	background-color: var(--main-background-color);
+	box-shadow: var(--box-shadow-color) 0px 1px 2px;
+}
+
+table {
+	width: 100%;
+	border-collapse: collapse;
+	border-spacing: 0;
+}
+
+td, th {
+	padding: 0.1em;
+}
+
+td > input {
+	width: 100%;
+	height: 100%;
+}
+
+button {
+	background-color: var(--primary-color);
+	color: var(--primary-text-color);
+	border: none;
+	padding: 0.2em 0.5em;
+	border-radius: 0.5em;
+	margin: 0 0.2em;
+	box-shadow: var(--box-shadow-color) 0px 1px 2px;
+	font-family: "Roboto";
+	font-size: 14pt;
+}
+
+.row > article + article {
+	margin-left: 0;
+}
+
+.row {
+	display: flex;
+	flex-direction: row;
+}
+
+.justify > * {
+	flex-grow: 1;
+	flex-basis: 100%;
+}
+
+.column {
+	display: flex;
+	flex-direction: column;
+}
+
+.center {
+	text-align: center;
+	justify-content: center;
+}
+
+.left {
+	text-align: left;
+}
+
+.right {
+	text-align: right;
+}
+
+.field {
+	display: inline-block;
+	width: 2em;
+	font-size: 16pt;
+	text-align: center;
+	overflow: hidden;
+}
+
+.space-between {
+	justify-content: space-between;
+}
+
+.align-middle {
+	align-items: center;
+}
+
+.wrap {
+	flex-wrap: wrap;
+}
+
+button.round {
+	width: 1em;
+	height: 1em;
+	border-radius: 100%;
+	position: relative;
+}
+
+button.round::before {
+	content: "";
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	background-repeat: no-repeat;
+	background-position: center;
+}
+
+button.plus::before {
+	background-image: linear-gradient(var(--primary-text-color), var(--primary-text-color)), linear-gradient(var(--primary-text-color), var(--primary-text-color));
+	background-size: 20% 60%, 60% 20%;
+}
+
+button.minus::before {
+	background-image: linear-gradient(var(--primary-text-color), var(--primary-text-color));
+	background-size: 60% 20%;
+}
+
+button.times::before {
+	background-image: linear-gradient(var(--primary-text-color), var(--primary-text-color)), linear-gradient(var(--primary-text-color), var(--primary-text-color));
+	background-size: 20% 60%, 60% 20%;
+	transform: rotate(45deg);
+}
+
+
+select {
+	font-family: "Roboto";
+    color: var(--body-foreground-color);
+	border: solid thin var(--component-border-color);
+	background-color: var(--component-background-color);
+	border-radius: 0.5em;
+	padding: 0.2em 0.5em;
+	box-shadow: var(--box-shadow-color) 0px 1px 2px inset;
+}
+
+option {
+	font-family: "Roboto";
+	color: var(--body-foreground-color);
+	background-color: var(--component-background-color);
+}
+
+.large {
+	font-size: 16pt;
+}
+
+.small {
+	font-size: 12pt;
+}
+
+.color-violet {
+	--primary-color: #7c409a;
+}
+
+.color-orange {
+	--primary-color: #fa6731;
+}
+
+.color-green {
+	--primary-color: #237b51;
+}
+
+.color-red {
+	--primary-color: #cc1b23;
+}
+
+.color-blue {
+	--primary-color: #5174b8;
+}
