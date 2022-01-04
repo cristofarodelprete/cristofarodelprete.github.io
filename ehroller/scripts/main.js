@@ -155,7 +155,7 @@ const App = {
 			for (let i = 0; i < this.dice.length; i++) {
 				total += this.count(this.dice[i]);
 			}
-			if (this.settings.combat) {
+			if (this.settings.combat || this.settings.spell) {
 				if (total > 1) return this.messages[this.lang].result.nSuccesses.replace("{n}", total);
 				else if (total == 1) return this.messages[this.lang].result.oneSuccess;
 				else return this.messages[this.lang].result.zeroSuccesses;
