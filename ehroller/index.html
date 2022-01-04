@@ -85,16 +85,18 @@
 					</span>
 				</section>
 				<section>
-					<strong><label class="switch"><input type="checkbox" v-model="settings.blessed" /><span>&nbsp;{{ messages[lang].blessed }}</span></label></strong>
-				</section>
-				<section>
-					<strong><label class="switch"><input type="checkbox" v-model="settings.cursed" /><span>&nbsp;{{ messages[lang].cursed }}</span></label></strong>
-				</section>
-				<section>
 					<strong><label class="switch"><input type="checkbox" v-model="settings.combat" /><span>&nbsp;{{ messages[lang].combatMode }}</span></label></strong>
 				</section>
 				<section>
 					<strong><label class="switch"><input type="checkbox" v-model="settings.spell" /><span>&nbsp;{{ messages[lang].spellMode }}</span></label></strong>
+				</section>
+			</article>
+			<article>
+				<section>
+					<strong><label class="switch"><input type="checkbox" v-model="settings.blessed" /><span>&nbsp;{{ messages[lang].blessed }}</span></label></strong>
+				</section>
+				<section>
+					<strong><label class="switch"><input type="checkbox" v-model="settings.cursed" /><span>&nbsp;{{ messages[lang].cursed }}</span></label></strong>
 				</section>
 				<section>
 					<strong><label class="switch"><input type="checkbox" v-model="settings.sixes" /><span>&nbsp;{{ messages[lang].sixesCountDouble }}</span></label></strong>
