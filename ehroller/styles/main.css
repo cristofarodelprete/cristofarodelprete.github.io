@@ -7,6 +7,10 @@
 @import url('tabs.css');
 @import url('dice.css');
 
+html {
+    touch-action: manipulation;
+}
+
 body {
 	display: flex;
 	flex-direction: column;
