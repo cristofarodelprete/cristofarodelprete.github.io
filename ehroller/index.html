@@ -84,25 +84,31 @@
 						<button type="button" class="round times" @click="modifiers.test = 0"></button>
 					</span>
 				</section>
-				<section>
-					<strong><label class="switch"><input type="checkbox" v-model="settings.combat" /><span></span></label>&nbsp;{{ messages[lang].combatMode }}</strong>
+				<section class="row">
+					<label class="switch"><input type="checkbox" v-model="settings.combat" /><span></span></label>
+					<strong>&nbsp;{{ messages[lang].combatMode }}</strong>
 				</section>
-				<section>
-					<strong><label class="switch"><input type="checkbox" v-model="settings.spell" /><span></span></label>&nbsp;{{ messages[lang].spellMode }}</strong>
+				<section class="row">
+					<label class="switch"><input type="checkbox" v-model="settings.spell" /><span></span></label>
+					<strong>&nbsp;{{ messages[lang].spellMode }}</strong>
 				</section>
 			</article>
 			<article>
-				<section>
-					<strong><label class="switch"><input type="checkbox" v-model="settings.blessed" /><span></span></label>&nbsp;{{ messages[lang].blessed }}</strong>
+				<section class="row">
+					<label class="switch"><input type="checkbox" v-model="settings.blessed" /><span></span></label>
+					<strong>&nbsp;{{ messages[lang].blessed }}</strong>
 				</section>
-				<section>
-					<strong><label class="switch"><input type="checkbox" v-model="settings.cursed" /><span></span></label>&nbsp;{{ messages[lang].cursed }}</strong>
+				<section class="row">
+					<label class="switch"><input type="checkbox" v-model="settings.cursed" /><span></span></label>
+					<strong>&nbsp;{{ messages[lang].cursed }}</strong>
 				</section>
-				<section>
-					<strong><label class="switch"><input type="checkbox" v-model="settings.sixes" /><span></span></label>&nbsp;{{ messages[lang].sixesCountDouble }}</strong>
+				<section class="row">
+					<label class="switch"><input type="checkbox" v-model="settings.sixes" /><span></span></label>
+					<strong>&nbsp;{{ messages[lang].sixesCountDouble }}</strong>
 				</section>
-				<section>
-					<strong><label class="switch"><input type="checkbox" v-model="settings.ones" /><span></span></label>&nbsp;{{ messages[lang].onesCancelSuccesses }}</strong>
+				<section class="row">
+					<label class="switch"><input type="checkbox" v-model="settings.ones" /><span></span></label>
+					<strong>&nbsp;{{ messages[lang].onesCancelSuccesses }}</strong>
 				</section>
 			</article>
 			<article v-if="dice.length > 0">
