@@ -113,7 +113,7 @@
 			</article>
 			<section class="center">
 				<button type="button" class="large" @click="roll()">{{ messages[lang].roll }}</button>
-				<button type="button" class="large" @click="clear()">{{ messages[lang].clear }}</button>
+				<button type="button" class="large" @click="clear()" :disabled="dice.length == 0">{{ messages[lang].clear }}</button>
 			</section>
 		</section>
 	</main>
