@@ -15,14 +15,13 @@ const App = {
 					improvement: "Improvement",
 					bonus: "Bonus",
 					combatBonus: "Combat bonus",
-					modifier: "Modifier",
+					spellBonus: "Spell bonus",
+					encounterModifier: "Encounter modifier",
+					testModifier: "Test modifier",
 					reset: "Reset",
-					successMode: {
-						label: "Success mode",
-						normal: "Normal",
-						blessed: "Blessed",
-						cursed: "Cursed",
-					},
+					blessed: "Blessed condition",
+					cursed: "Cursed condition",
+					spellMode: "Spell mode",
 					combatMode: "Combat mode",
 					sixesCountDouble: "6's count double",
 					onesCancelSuccesses: "1's cancel successes",
@@ -49,15 +48,14 @@ const App = {
 					improvement: "Miglioramento",
 					bonus: "Bonus",
 					combatBonus: "Bonus in combattimento",
-					modifier: "Modificatore",
+					spellBonus: "Bonus incantesimo",
+					encounterModifier: "Modificatore incontro",
+					testModifier: "Modificatore prova",
 					reset: "Resetta",
-					successMode: {
-						label: "Modalità successi",
-						normal: "Normale",
-						blessed: "Benedetto",
-						cursed: "Maledetto",
-					},
+					blessed: "Condizione Benedetto",
+					cursed: "Condizione Maledetto",
 					combatMode: "Modalità combattimento",
+					spellMode: "Modalità incantesimo",
 					sixesCountDouble: "I 6 contano doppio",
 					onesCancelSuccesses: "Gli 1 annullano i successi",
 					roll: "Lancia",
@@ -76,37 +74,46 @@ const App = {
 					base: 2,
 					improvement: 0,
 					bonus: 0,
-					combat: 0
+					combat: 0,
+					spell: 0
 				},
 				influence: {
 					base: 2,
 					improvement: 0,
 					bonus: 0,
-					combat: 0
+					combat: 0,
+					spell: 0
 				},
 				observation: {
 					base: 2,
 					improvement: 0,
 					bonus: 0,
-					combat: 0
+					combat: 0,
+					spell: 0
 				},
 				strength: {
 					base: 2,
 					improvement: 0,
 					bonus: 0,
-					combat: 0
+					combat: 0,
+					spell: 0
 				},
 				will: {
 					base: 2,
 					improvement: 0,
 					bonus: 0,
-					combat: 0
+					combat: 0,
+					spell: 0
 				}
 			},
 			stat: "lore",
-			modifier: 0,
+			modifiers: {
+				encounter: 0,
+				test: 0,
+			},
 			settings: {
-				successes: [ 5, 6 ],
+				blessed: false,
+				cursed: false,
 				combat: false,
 				sixes: false,
 				ones: false
@@ -121,10 +128,22 @@ const App = {
 	},
 	watch: {
 		stats: {
-			handler(value) {
+			handler(value, old) {
 				localStorage.ehRollerStats = JSON.stringify(value);
 			},
 			deep: true
+		},
+		'settings.blessed'(value) {
+			if (value) this.settings.cursed = false;
+		},
+		'settings.cursed'(value) {
+			if (value) this.settings.blessed = false;
+		},
+		'settings.combat'(value) {
+			if (value) this.settings.spell = false;
+		},
+		'settings.spell'(value) {
+			if (value) this.settings.combat = false;
 		}
 	},
 	computed: {
@@ -134,9 +153,7 @@ const App = {
 		result() {
 			let total = 0;
 			for (let i = 0; i < this.dice.length; i++) {
-				if (this.settings.sixes && this.dice[i].value == 6) total += 2;
-				else if (this.settings.successes.indexOf(this.dice[i].value) >= 0) total++;
-				else if (this.settings.ones && this.dice[i].value == 1) total--;
+				total += this.count(this.dice[i]);
 			}
 			if (this.settings.combat) {
 				if (total > 1) return this.messages[this.lang].result.nSuccesses.replace("{n}", total);
@@ -149,16 +166,28 @@ const App = {
 		}
 	},
 	methods: {
+		count(die) {
+			switch (die.value) {
+				case 6: return this.settings.sixes ? 2 : 1;
+				case 5: return this.settings.cursed ? 0 : 1;
+				case 4: return this.settings.blessed ? 1 : 0;
+				case 1: return this.settings.ones ? -1 : 0;
+				default: return 0;
+			}
+		},
 		roll() {
 			let n = 0;
 			n += this.stats[this.stat].base;
 			n += this.stats[this.stat].improvement;
 			if (this.settings.combat) {
-				n += this.stats[this.stat].combat;
+				n += Math.max(this.stats[this.stat].combat, this.stats[this.stat].bonus);
+			} else if (this.settings.spell) {
+				n += Math.max(this.stats[this.stat].spell, this.stats[this.stat].bonus);
 			} else {
 				n += this.stats[this.stat].bonus;
 			}
-			n += this.modifier;
+			n += this.modifiers.encounter;
+			n += this.modifiers.test;
 			if (n < 1) n = 1;
 			let dice = [];
 			for (let i = 0; i < n; i++) {

@@ -214,3 +214,7 @@ option {
 .color-blue {
 	--primary-color: #5174b8;
 }
+
+.text-gray {
+	color: var(--gray-text-color);
+}

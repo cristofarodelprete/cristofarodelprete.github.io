@@ -39,37 +39,62 @@
 					</span>
 				</section>
 				<section class="row space-between">
-					<strong>{{ settings.combat ? messages[lang].combatBonus : messages[lang].bonus }}</strong>
+					<strong>{{ messages[lang].bonus }}</strong>
 					<span class="row align-middle">
-						<button type="button" class="round minus" @click="stats[stat][settings.combat ? 'combat' : 'bonus']--" :disabled="stats[stat][settings.combat ? 'combat' : 'bonus'] <= 0"></button>
-						<span class="field">{{ settings.combat ? stats[stat].combat : stats[stat].bonus }}</span>
-						<button type="button" class="round plus" @click="stats[stat][settings.combat ? 'combat' : 'bonus']++"></button>
+						<button type="button" class="round minus" @click="stats[stat].bonus--" :disabled="stats[stat].bonus <= 0"></button>
+						<span class="field" :class="{ 'text-gray': settings.combat && stats[stat].bonus < stats[stat].combat || settings.spell && stats[stat].bonus < stats[stat].spell }">{{ stats[stat].bonus }}</span>
+						<button type="button" class="round plus" @click="stats[stat].bonus++"></button>
+					</span>
+				</section>
+				<section class="row space-between" v-if="settings.combat">
+					<strong>{{ messages[lang].combatBonus }}</strong>
+					<span class="row align-middle">
+						<button type="button" class="round minus" @click="stats[stat].combat--" :disabled="stats[stat].combat <= 0"></button>
+						<span class="field" :class="{ 'text-gray': stats[stat].combat <= stats[stat].bonus }">{{ stats[stat].combat }}</span>
+						<button type="button" class="round plus" @click="stats[stat].combat++"></button>
+					</span>
+				</section>
+				<section class="row space-between" v-if="settings.spell">
+					<strong>{{ messages[lang].spellBonus }}</strong>
+					<span class="row align-middle">
+						<button type="button" class="round minus" @click="stats[stat].spell--" :disabled="stats[stat].spell <= 0"></button>
+						<span class="field" :class="{ 'text-gray': stats[stat].spell <= stats[stat].bonus }">{{ stats[stat].spell }}</span>
+						<button type="button" class="round plus" @click="stats[stat].spell++"></button>
 					</span>
 				</section>
 			</article>
 			<article>
 				<section class="row space-between">
-					<strong>{{ messages[lang].modifier }}</strong>
+					<strong>{{ messages[lang].encounterModifier }}</strong>
 					<span class="row align-middle">
-						<button type="button" class="round minus" @click="modifier--"></button>
-						<span class="field">{{ modifier }}</span>
-						<button type="button" class="round plus" @click="modifier++"></button>
+						<button type="button" class="round minus" @click="modifiers.encounter--"></button>
+						<span class="field">{{ modifiers.encounter }}</span>
+						<button type="button" class="round plus" @click="modifiers.encounter++"></button>
 						&nbsp;
-						<button type="button" class="round times" @click="modifier = 0"></button>
+						<button type="button" class="round times" @click="modifiers.encounter = 0"></button>
+					</span>
+				</section>
+				<section class="row space-between">
+					<strong>{{ messages[lang].testModifier }}</strong>
+					<span class="row align-middle">
+						<button type="button" class="round minus" @click="modifiers.test--"></button>
+						<span class="field">{{ modifiers.test }}</span>
+						<button type="button" class="round plus" @click="modifiers.test++"></button>
+						&nbsp;
+						<button type="button" class="round times" @click="modifiers.test = 0"></button>
 					</span>
 				</section>
 				<section>
-					<label class="row space-between">
-						<strong>{{ messages[lang].successMode.label }}</strong>
-						<select v-model="settings.successes">
-							<option :value="[ 5, 6 ]">{{ messages[lang].successMode.normal }}</option>
-							<option :value="[ 4, 5, 6 ]">{{ messages[lang].successMode.blessed }}</option>
-							<option :value="[ 6 ]">{{ messages[lang].successMode.cursed }}</option>
-						</select>
-					</label>
+					<strong><label class="switch"><input type="checkbox" v-model="settings.blessed" /><span>&nbsp;{{ messages[lang].blessed }}</span></label></strong>
+				</section>
+				<section>
+					<strong><label class="switch"><input type="checkbox" v-model="settings.cursed" /><span>&nbsp;{{ messages[lang].cursed }}</span></label></strong>
 				</section>
 				<section>
 					<strong><label class="switch"><input type="checkbox" v-model="settings.combat" /><span>&nbsp;{{ messages[lang].combatMode }}</span></label></strong>
+				</section>
+				<section>
+					<strong><label class="switch"><input type="checkbox" v-model="settings.spell" /><span>&nbsp;{{ messages[lang].spellMode }}</span></label></strong>
 				</section>
 				<section>
 					<strong><label class="switch"><input type="checkbox" v-model="settings.sixes" /><span>&nbsp;{{ messages[lang].sixesCountDouble }}</span></label></strong>
@@ -80,7 +105,7 @@
 			</article>
 			<article v-if="dice.length > 0">
 				<section class="row wrap center">
-					<button v-for="(die, index) in dice" class="die" :class="{ failure: (settings.ones ? die.value == 1 : false), success: settings.successes.indexOf(die.value) >= 0 }" :value="die.value" :rnd="die.rnd" @click="reroll(index)"></button>
+					<button v-for="(die, index) in dice" class="die" :class="{ failure: count(die) < 0, success: count(die) > 0 }" :value="die.value" :rnd="die.rnd" @click="reroll(index)"></button>
 				</section>
 				<section class="center">
 					<h2>{{ result }}</h2>
