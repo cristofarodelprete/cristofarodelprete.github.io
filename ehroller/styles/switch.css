@@ -3,21 +3,21 @@ input[type="checkbox"] {
 	vertical-align: middle;
 	appearance: none;
 	color: var(--primary-color);
-    width: 2em;
-    height: 1em;
+    width: 3em;
+    height: 1.5em;
     border-radius: 1em;
     border: solid thin var(--component-border-color);
     background-image: radial-gradient(circle closest-side, currentColor 0, currentColor 80%, transparent calc(80% + 0.5px), transparent 100%);
     background-color: var(--component-background-color);
     background-repeat: no-repeat;
     background-size: contain;
-    background-position: -0.5em center;
+    background-position: -0.75em center;
 	transition: color 0.2s, background-position 0.2s;
 	filter: saturate(0%);
 }
 
 input[type="checkbox"]:checked {
-	background-position: 0.5em center;
+	background-position: 0.75em center;
 	filter: none;
 }
 
