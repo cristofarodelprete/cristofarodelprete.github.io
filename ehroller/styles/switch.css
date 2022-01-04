@@ -1,4 +1,12 @@
-input[type="checkbox"] {
+label.switch > input[type="checkbox"] {
+	visibility: hidden;
+	width: 0;
+	height: 0;
+	opacity: 0;
+}
+
+label.switch > input[type="checkbox"] + span::before {
+	content: "";
 	box-shadow: var(--box-shadow-color) 0px 1px 2px inset;
 	vertical-align: middle;
 	appearance: none;
@@ -16,17 +24,17 @@ input[type="checkbox"] {
 	filter: saturate(0%);
 }
 
-input[type="checkbox"]:checked {
+label.switch > input[type="checkbox"]:checked + span::before {
 	background-position: 0.75em center;
 	filter: none;
 }
 
-input[type="checkbox"]:disabled {
+label.switch > input[type="checkbox"]:disabled + span::before {
 	filter: saturate(0%) brightness(80%);
 }
 
 @media screen and (prefers-color-scheme: dark) {
-	input[type="checkbox"]:disabled {
+	label.switch > input[type="checkbox"]:disabled + span::before {
 		filter: saturate(0%) brightness(120%);
 	}
 }

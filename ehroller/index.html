@@ -69,13 +69,13 @@
 					</label>
 				</section>
 				<section>
-					<strong><label><input type="checkbox" v-model="settings.combat" /> {{ messages[lang].combatMode }}</label></strong>
+					<strong><label><input type="checkbox" v-model="settings.combat" /><span>&nbsp;{{ messages[lang].combatMode }}</span></label></strong>
 				</section>
 				<section>
-					<strong><label><input type="checkbox" v-model="settings.sixes" /> {{ messages[lang].sixesCountDouble }}</label></strong>
+					<strong><label><input type="checkbox" v-model="settings.sixes" /><span>&nbsp;{{ messages[lang].sixesCountDouble }}</span></label></strong>
 				</section>
 				<section>
-					<strong><label><input type="checkbox" v-model="settings.ones" /> {{ messages[lang].onesCancelSuccesses }}</label></strong>
+					<strong><label><input type="checkbox" v-model="settings.ones" /><span>&nbsp;{{ messages[lang].onesCancelSuccesses }}</span></label></strong>
 				</section>
 			</article>
 			<article v-if="dice.length > 0">
