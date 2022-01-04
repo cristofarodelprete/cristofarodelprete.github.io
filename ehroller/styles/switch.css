@@ -3,29 +3,33 @@ label.switch > input[type="checkbox"] {
 	width: 0;
 	height: 0;
 	opacity: 0;
+	margin: 0;
+	overflow: hidden;
 }
 
 label.switch > input[type="checkbox"] + span::before {
 	content: "";
+	display: inline-block;
 	box-shadow: var(--box-shadow-color) 0px 1px 2px inset;
 	vertical-align: middle;
 	appearance: none;
 	color: var(--primary-color);
-    width: 3em;
-    height: 1.5em;
+    width: 2em;
+    height: 1em;
     border-radius: 1em;
     border: solid thin var(--component-border-color);
     background-image: radial-gradient(circle closest-side, currentColor 0, currentColor 80%, transparent calc(80% + 0.5px), transparent 100%);
     background-color: var(--component-background-color);
     background-repeat: no-repeat;
     background-size: contain;
-    background-position: -0.75em center;
+    background-position: -0.5em center;
 	transition: color 0.2s, background-position 0.2s;
 	filter: saturate(0%);
+	margin-top: -0.2em;
 }
 
 label.switch > input[type="checkbox"]:checked + span::before {
-	background-position: 0.75em center;
+	background-position: 0.5em center;
 	filter: none;
 }
 

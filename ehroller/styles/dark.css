@@ -1,8 +1,8 @@
 :root {
-	--body-background-color: #111;
+	--body-background-color: #000;
 	--body-foreground-color: #eee;
-	--box-shadow-color: #333;
-	--main-background-color: #000;
-	--component-border-color: #666;
-	--component-background-color: #000;
+	--box-shadow-color: #111;
+	--main-background-color: #222;
+	--component-border-color: #ccc;
+	--component-background-color: #222;
 }
