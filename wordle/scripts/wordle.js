@@ -208,7 +208,7 @@ Wordle.prototype.redraw = function() {
 	}
 	let kk = Object.keys(this.items.keyboard);
 	for (let i = 0; i < kk.length; i++) {
-		if (this.facts[kk[i]]) {
+		if (typeof this.facts[kk[i]] != "undefined") {
 			this.items.keyboard[kk[i]].attr("value", this.facts[kk[i]]);
 		} else {
 			this.items.keyboard[kk[i]].removeAttr("value");
