@@ -1,0 +1,361 @@
+:root {
+	--padding-header: .5%;
+	--letter-margin-horizontal: 2%;
+	--letter-margin-vertical: 5%;
+	--key-margin: 1.5%;
+	--letter-form-factor: 1;
+	--key-form-factor: 1.5;
+	--letter-border-radius: 2%;
+	--key-border-radius: 5%;
+	--keyboard-padding-horizontal: 1%;
+	--keyboard-padding-vertical: 1%;
+	--words-padding-horizontal: 5%;
+	--words-padding-vertical: 1%;
+	--body-background: #fff;
+	--shadow-color: #999;
+	--header-background: #eee;
+	--header-foreground: #111;
+	--letter-foreground: #111;
+	--letter-background: #eee;
+	--letter-foreground-wrong-letter: #eee;
+	--letter-background-wrong-letter: #666;
+	--letter-foreground-right-letter: #eee;
+	--letter-background-right-letter: #880;
+	--letter-foreground-right-position: #eee;
+	--letter-background-right-position: #0a0;
+	--key-foreground: #111;
+	--key-background: #ccc;
+	--key-foreground-hover: #111;
+	--key-background-hover: #ddd;
+	--key-foreground-wrong-letter: #eee;
+	--key-background-wrong-letter: #666;
+	--key-foreground-hover-wrong-letter: #eee;
+	--key-background-hover-wrong-letter: #777;
+	--key-foreground-right-letter: #eee;
+	--key-background-right-letter: #880;
+	--key-foreground-hover-right-letter: #eee;
+	--key-background-hover-right-letter: #990;
+	--key-foreground-right-position: #eee;
+	--key-background-right-position: #0a0;
+	--key-foreground-hover-right-position: #eee;
+	--key-background-hover-right-position: #0b0;
+}
+@media (prefers-color-scheme: dark) {
+	:root {
+		--body-background: #fff;
+		--shadow-color: #999;
+		--header-background: #eee;
+		--header-foreground: #111;
+		--letter-foreground: #111;
+		--letter-background: #eee;
+		--letter-foreground-wrong-letter: #eee;
+		--letter-background-wrong-letter: #666;
+		--letter-foreground-right-letter: #eee;
+		--letter-background-right-letter: #880;
+		--letter-foreground-right-position: #eee;
+		--letter-background-right-position: #0a0;
+		--key-foreground: #111;
+		--key-background: #ccc;
+		--key-foreground-hover: #111;
+		--key-background-hover: #ddd;
+		--key-foreground-wrong-letter: #eee;
+		--key-background-wrong-letter: #666;
+		--key-foreground-hover-wrong-letter: #eee;
+		--key-background-hover-wrong-letter: #777;
+		--key-foreground-right-letter: #eee;
+		--key-background-right-letter: #880;
+		--key-foreground-hover-right-letter: #eee;
+		--key-background-hover-right-letter: #990;
+		--key-foreground-right-position: #eee;
+		--key-background-right-position: #0a0;
+		--key-foreground-hover-right-position: #eee;
+		--key-background-hover-right-position: #0b0;
+	}
+}
+
+html, body {
+	min-height: 100vh;
+}
+
+html, body, main {
+	margin: 0;
+	padding: 0;
+	display: flex;
+	flex-direction: column;
+	flex-grow: 1;
+}
+
+html {
+	font-family: sans-serif;
+	user-select: none;
+}
+
+body {
+	background: var(--body-background);
+}
+
+header {
+	position: sticky;
+	top: 0;
+	background: var(--header-background);
+	color: var(--header-foreground);
+	box-shadow: var(--shadow-color) 0px 1px 2px;
+	z-index: 999;
+}
+
+header > h1 {
+	margin: 0;
+	font-size: 7vw;
+	font-weight: bold;
+	text-transform: uppercase;
+	text-align: center;
+}
+
+header > h1::before, header > h1::after {
+	content: "";
+	display: block;
+	height: 0;
+	padding-top: var(--padding-header);
+}
+
+main {
+	display: flex;
+	flex-direction: column;
+}
+
+words {
+	font-size: 10vw;
+	font-weight: bold;
+	text-transform: uppercase;
+	display: flex;
+	flex-direction: column;
+	padding: var(--words-padding-vertical) var(--words-padding-horizontal);
+	flex-grow: 1;
+}
+
+words > word {
+	display: flex;
+	flex-direction: row;
+	width: 100%;
+	justify-content: space-between;
+	margin: var(--letter-margin-vertical) 0;
+}
+
+words > word + word {
+	margin-top: 0;
+}
+
+words > word > letter {
+	display: inline-block;
+	position: relative;
+	flex-grow: 1;
+	margin: 0;
+	background: var(--letter-background);
+	color: var(--letter-foreground);
+	border-radius: calc(var(--letter-border-radius) * var(--letter-form-factor))/var(--letter-border-radius);
+	box-shadow: var(--shadow-color) 0px 1px 2px;
+}
+
+words > word > letter + letter {
+	margin-left: var(--letter-margin-horizontal);
+}
+
+words > word > letter::before {
+	content: "";
+	display: block;
+	height: 0;
+	padding-top: calc(100% * var(--letter-form-factor));
+}
+
+words > word > letter[label]::after {
+	content: attr(label);
+	position: absolute;
+	top: 50%;
+	bottom: 50%;
+	left: 0;
+	right: 0;
+	line-height: 0;
+	overflow: visible;
+	text-align: center;
+}
+
+keyboard {
+	position: sticky;
+	bottom: 0;
+	font-size: 5vw;
+	font-weight: bold;
+	text-transform: uppercase;
+	display: flex;
+	flex-direction: column;
+	padding: var(--keyboard-padding-vertical) var(--keyboard-padding-horizontal);
+	background: var(--body-background);
+	box-shadow: var(--shadow-color) 0px -1px 2px;
+}
+
+keyboard > row {
+	display: flex;
+	flex-direction: row;
+	margin: 0;
+}
+
+keyboard > row:nth-child(even)::before {
+	content: "";
+	display: inline-block;
+	flex-grow: 0.5;
+}
+
+keyboard > row:nth-child(even)::after {
+	content: "";
+	display: inline-block;
+	flex-grow: 0.5;
+	margin-left: var(--key-margin);
+}
+
+keyboard > row + row {
+	margin-top: var(--key-margin);
+}
+
+keyboard > row > key {
+	cursor: pointer;
+	display: inline-block;
+	position: relative;
+	flex-grow: 1;
+	margin: 0;
+	background: #ccc;
+	border-radius: calc(var(--key-border-radius) * var(--key-form-factor))/var(--key-border-radius);
+	box-shadow: var(--shadow-color) 0px 1px 2px;
+}
+
+keyboard > row > key:hover {
+	background: var(--key-background-hover);
+	color: var(--key-foreground-hover);
+}
+
+keyboard > row > key + key {
+	margin-left: var(--key-margin);
+}
+
+keyboard > row > key::before {
+	content: "";
+	display: block;
+	height: 0;
+	padding-top: calc(100% * var(--key-form-factor));
+}
+
+keyboard > row > key[letter]::after, keyboard > row > key[enter]::after, keyboard > row > key[backspace]::after {
+	position: absolute;
+	top: 50%;
+	bottom: 50%;
+	left: 0;
+	right: 0;
+	line-height: 0;
+	overflow: visible;
+	text-align: center;
+}
+
+keyboard > row > key[letter]::after {
+	content: attr(letter);
+}
+
+keyboard > row > key[enter]::after {
+	content: "\2713";
+}
+
+keyboard > row > key[backspace]::after {
+	content: "\232B";
+}
+
+keyboard > row > key[enter], keyboard > row > key[backspace] {
+	flex-grow: 2;
+}
+
+keyboard > row > key[enter]::before, keyboard > row > key[backspace]::before {
+	padding-top: calc(50% * var(--key-form-factor));
+}
+
+words > word > letter[value="2"] {
+	color: var(--letter-foreground-right-position);
+	background: var(--letter-background-right-position);
+}
+
+words > word > letter[value="1"] {
+	color: var(--letter-foreground-right-letter);
+	background: var(--letter-background-right-letter);
+}
+
+words > word > letter[value="0"] {
+	color: var(--letter-foreground-wrong-letter);
+	background: var(--letter-background-wrong-letter);
+}
+
+keyboard > row > key[value="2"] {
+	color: var(--key-foreground-right-position);
+	background: var(--key-background-right-position);
+}
+
+keyboard > row > key[value="1"] {
+	color: var(--key-foreground-right-letter);
+	background: var(--key-background-right-letter);
+}
+
+keyboard > row > key[value="0"] {
+	color: var(--key-foreground-wrong-letter);
+	background: var(--key-background-wrong-letter);
+}
+
+keyboard > row > key[value="2"]:hover, keyboard > row > key[value="2"]:active {
+	color: var(--key-foreground-hover-right-position);
+	background: var(--key-background-hover-right-position);
+}
+
+keyboard > row > key[value="1"]:hover, keyboard > row > key[value="1"]:active {
+	color: var(--key-foreground-hover-right-letter);
+	background: var(--key-background-hover-right-letter);
+}
+
+keyboard > row > key[value="0"]:hover, keyboard > row > key[value="0"]:active {
+	color: var(--key-foreground-hover-wrong-letter);
+	background: var(--key-background-hover-wrong-letter);
+}
+
+popup {
+	display: block;
+	position: sticky;
+	top: 0;
+	height: 0;
+	overflow: visible;
+	z-index: 500;
+}
+
+popup[show] > content {
+	margin-top: 0;
+}
+
+popup > content {
+	display: block;
+	background: var(--header-background);
+	padding: 4vw;
+	margin: 0 3vw;
+	border-radius: 0 0 2vw 2vw;
+	text-align: center;
+	margin-top: -100%;
+	box-shadow: var(--shadow-color) 0px 1px 2px;
+	transition: margin-top 0.2s;
+}
+
+popup > content > buttons {
+	display: block;
+	margin-top: 2vw;
+}
+
+popup > content > buttons > button {
+	border: none;
+	border-radius: 2vw;
+	background: var(--body-background);
+	margin: 1vw;
+	padding: 2vw;
+	font: inherit;
+	font-weight: bold;
+	font-size: 80%;
+	box-shadow: var(--shadow-color) 0px 1px 2px;
+}
