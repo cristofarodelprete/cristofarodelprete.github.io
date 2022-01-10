@@ -119,10 +119,10 @@ Wordle.prototype.enter = function() {
 			let trial = [];
 			let checked = {};
 			for (let i = 0; i < this.config.letters; i++) {
-				trial.push({ letter: l, value: 0 });
+				trial.push({ letter: wu.charAt(i), value: 0 });
 			}
 			for (let i = 0; i < this.config.letters; i++) {
-				let l = wu.charAt(i);
+				let l = trial[i].letter;
 				if (l == this.target.charAt(i)) {
 					trial[i].value = 2;
 					if (!checked[l]) checked[l] = 1;
@@ -130,7 +130,8 @@ Wordle.prototype.enter = function() {
 				}
 			}
 			for (let i = 0; i < this.config.letters; i++) {
-				if (trial[i].value = 0) {
+				let l = trial[i].letter;
+				if (trial[i].value == 0) {
 					let l = wu.charAt(i);
 					if ((this.letters[l] || 0) > (checked[l] || 0)) {
 						trial[i].value = 1;
