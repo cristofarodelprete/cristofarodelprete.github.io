@@ -269,7 +269,7 @@ Wordle.prototype.openPopup = function(content, buttons, fixed) {
 
 Wordle.prototype.click = function(e) {
 	if (!this.win && this.tries.length < this.config.tries) { 
-		let t = $(e.currentTarget);
+		let t = $(e.target);
 		if (this.isPopupOpen() && !this.isPopupFixed()) {
 			if (!this.popup.root.contains(t)) {
 				this.closePopup();
