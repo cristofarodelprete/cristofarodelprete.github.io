@@ -1,12 +1,13 @@
 function Wordle(container, config) {
 	this.container = container;
 	this.config = $.extend({
-		source: "words-6.txt",
+		source: "words-5.txt",
 		guesses: 6,
-		letters: 6
+		letters: 5,
+		interval: "daily",
+		weekStartsOnMonday: false
 	}, config || {});
-	this.today = null;
-	this.tomorrow = null;
+	this.interval = { };
 	this.target = null;
 	this.letters = null;
 	this.facts = null;
@@ -72,7 +73,7 @@ Wordle.prototype.loadSession = function() {
 	if (localStorage.wordle) {
 		let data = JSON.parse(localStorage.wordle);
 		let updated = Date.parse(data.updated);
-		if (updated >= this.today) {
+		if (updated >= this.interval.start) {
 			this.guesses = data.guesses;
 			return true;
 		}
@@ -84,7 +85,7 @@ Wordle.prototype.loadSession = function() {
  * Generates a new word to guess
  */
 Wordle.prototype.generateWord = function() {
-	let rng = new RNG(+this.today);
+	let rng = new RNG(+this.interval.start);
 	this.target = this.words[rng.random(0, this.words.length)].toUpperCase();
 	this.letters = {};
 	this.facts = {};
@@ -111,29 +112,51 @@ Wordle.prototype.checkGameState = function() {
 	this.win = w;
 	this.lose = !w && this.guesses.length == this.config.guesses;
 	if (this.win) {
-		this.openPopup(this.messages.winGame.replaceAll("{countdown}", "<countdown target=\"" + this.tomorrow.toISOString() + "\">" + Countdown.get(this.tomorrow) + "</countdown>"), [], true);
+		this.openPopup(this.messages.winGame.replaceAll("{countdown}", "<countdown target=\"" + this.interval.end.toISOString() + "\">" + Countdown.get(this.interval.end) + "</countdown>"), [], true);
 	} else if (this.lose) {
-		this.openPopup(this.messages.loseGame.replaceAll("{countdown}", "<countdown target=\"" + this.tomorrow.toISOString() + "\">" + Countdown.get(this.tomorrow) + "</countdown>"), [], true);
+		this.openPopup(this.messages.loseGame.replaceAll("{countdown}", "<countdown target=\"" + this.interval.end.toISOString() + "\">" + Countdown.get(this.interval.end) + "</countdown>"), [], true);
 	} else {
 		this.closePopup();
 	}
 };
 
 /**
+ * Calculates the game interval
+ */
+Wordle.prototype.calculateInterval = function() {
+	let start = new Date();
+	start.setMilliseconds(0);
+	start.setSeconds(0);
+	start.setMinutes(0);
+	if (this.config.interval != "hourly") {
+		start.setHours(0);
+		if (this.config.interval == "weekly") {
+			let d = start.getDay();
+			if (this.config.weekStartsOnMonday) {
+				d--;
+				if (d < 0) d = 6;
+			}
+			start.setDate(start.getDate() - d);
+		}
+	}
+	let end = new Date(+start);
+	if (this.config.interval == "hourly") {
+		end.setHours(end.getHours() + 1);
+	} else if (this.config.interval == "weekly") {
+		end.setDate(end.getDate() + 7);
+	} else {
+		end.setDate(end.getDate() + 1);
+	}
+	this.interval.start = start;
+	this.interval.end = end;
+}
+
+/**
  * Initializes a new game
  */
 Wordle.prototype.initializeGame = function() {
-	let now = new Date();
-	let today = new Date(+now);
-	today.setMilliseconds(0);
-	today.setSeconds(0);
-	today.setMinutes(0);
-	today.setHours(0);
-	this.today = today;
-	let tomorrow = new Date(+this.today);
-	tomorrow.setDate(tomorrow.getDate() + 1);
-	this.tomorrow = tomorrow;
-	setTimeout(Wordle.prototype.initializeGame.bind(this), +tomorrow - +now);
+	this.calculateInterval();
+	setTimeout(Wordle.prototype.initializeGame.bind(this), +this.interval.end - +(new Date()));
 	this.generateWord();
 	let loaded = this.loadSession();
 	if (loaded) this.checkGameState();

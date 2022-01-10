@@ -6,9 +6,9 @@ var Countdown = (function() {
 		if (d < 0) d = 0;
 		d = Math.round(d / 1000);
 		let s = d % 60;
-		d = Math.round(d / 60);
+		d = Math.floor(d / 60);
 		let m = d % 60;
-		let h = Math.round(d / 60);
+		let h = Math.floor(d / 60);
 		return (h < 10 ? "0" : "") + h + ":" + (m < 10 ? "0" : "") + m + ":" + (s < 10 ? "0" : "") + s;
 	}
 
