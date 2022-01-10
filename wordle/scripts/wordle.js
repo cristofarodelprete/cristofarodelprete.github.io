@@ -116,23 +116,28 @@ Wordle.prototype.enter = function() {
 		if (this.words.indexOf(wu) < 0) {
 			this.openPopup("Parola non trovata nel dizionario!", [{ label: "OK", action: this.closePopup }]);
 		} else {
-			let flag = true;
 			let trial = [];
 			let checked = {};
 			for (let i = 0; i < this.config.letters; i++) {
+				trial.push({ letter: l, value: 0 });
+			}
+			for (let i = 0; i < this.config.letters; i++) {
 				let l = wu.charAt(i);
-				let v = 0
 				if (l == this.target.charAt(i)) {
-					v = 2;
-				} else {
-					flag = false;
-					if ((this.letters[l] || 0) > (checked[l] || 0)) {
-						v = 1;
-					}
+					trial[i].value = 2;
+					if (!checked[l]) checked[l] = 1;
+					else checked[l]++;
 				}
-				if (!checked[l]) checked[l] = 1;
-				else checked[l]++;
-				trial.push({ letter: l, value: v });
+			}
+			for (let i = 0; i < this.config.letters; i++) {
+				if (trial[i].value = 0) {
+					let l = wu.charAt(i);
+					if ((this.letters[l] || 0) > (checked[l] || 0)) {
+						trial[i].value = 1;
+					}
+					if (!checked[l]) checked[l] = 1;
+					else checked[l]++;
+				}
 			}
 			this.tries.push(trial);
 			this.entered = "";

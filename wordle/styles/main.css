@@ -20,7 +20,7 @@
 	--letter-foreground-wrong-letter: #eee;
 	--letter-background-wrong-letter: #666;
 	--letter-foreground-right-letter: #eee;
-	--letter-background-right-letter: #880;
+	--letter-background-right-letter: #aa0;
 	--letter-foreground-right-position: #eee;
 	--letter-background-right-position: #0a0;
 	--key-foreground: #111;
@@ -32,7 +32,7 @@
 	--key-foreground-hover-wrong-letter: #eee;
 	--key-background-hover-wrong-letter: #777;
 	--key-foreground-right-letter: #eee;
-	--key-background-right-letter: #880;
+	--key-background-right-letter: #aa0;
 	--key-foreground-hover-right-letter: #eee;
 	--key-background-hover-right-letter: #990;
 	--key-foreground-right-position: #eee;
@@ -51,7 +51,7 @@
 		--letter-foreground-wrong-letter: #eee;
 		--letter-background-wrong-letter: #666;
 		--letter-foreground-right-letter: #eee;
-		--letter-background-right-letter: #880;
+		--letter-background-right-letter: #aa0;
 		--letter-foreground-right-position: #eee;
 		--letter-background-right-position: #0a0;
 		--key-foreground: #111;
@@ -63,7 +63,7 @@
 		--key-foreground-hover-wrong-letter: #eee;
 		--key-background-hover-wrong-letter: #777;
 		--key-foreground-right-letter: #eee;
-		--key-background-right-letter: #880;
+		--key-background-right-letter: #aa0;
 		--key-foreground-hover-right-letter: #eee;
 		--key-background-hover-right-letter: #990;
 		--key-foreground-right-position: #eee;
