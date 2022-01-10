@@ -2,7 +2,7 @@ function Wordle(container, config) {
 	this.container = container;
 	this.config = $.extend({
 		source: "words-6.txt",
-		tries: 6,
+		guesses: 6,
 		letters: 6
 	}, config || {});
 	this.today = null;
@@ -12,7 +12,7 @@ function Wordle(container, config) {
 	this.facts = null;
 	this.win = false;
 	this.lose = false;
-	this.tries = [];
+	this.guesses = [];
 	this.entered = "";
 	this.words = null;
 	this.keyboard = [
@@ -20,44 +20,70 @@ function Wordle(container, config) {
 		[ "A", "S", "D", "F", "G", "H", "J", "K", "L" ],
 		[ "Z", "X", "C", "V", "B", "N", "M" ]
 	];
+	this.messages = {
+		winGame: "Partita vinta!<br/>Prossima partita tra {countdown}",
+		loseGame: "Nessun tentativo rimasto!<br/>Riprova tra {countdown}",
+		wordNotFound: "Parola non trovata nel dizionario!",
+		ok: "OK",
+	};
 	this.items = {
 		words: [],
 		keyboard: [],
 		popup: {}
 	};
+	this.fetchDictionary();
+}
+
+/**
+ * Retrieves the dictionary from an AJAX source
+ */
+Wordle.prototype.fetchDictionary = function() {
 	$.ajax({
 		url: this.config.source,
 		dataType: "text",
-		success: this.fetch.bind(this)
+		success: this.prepareWords.bind(this)
 	});
-}
 
-Wordle.prototype.fetch = function(d) {
-	this.words = d.toUpperCase().replaceAll("\r\n", "\n").split("\n");
-	$(document).ready(this.bootstrap.bind(this));
 };
 
-Wordle.prototype.save = function() {
+/**
+ * Imports the words from the dictionary to memory
+ */
+Wordle.prototype.prepareWords = function(d) {
+	this.words = d.toUpperCase().replaceAll("\r\n", "\n").split("\n");
+	$(document).ready(this.bootstrapGame.bind(this));
+};
+
+/**
+ * Saves the current session to the local storage
+ */
+Wordle.prototype.saveSession = function() {
 	let data = {
 		updated: new Date().toISOString(),
-		tries: this.tries
+		guesses: this.guesses
 	};
 	localStorage.wordle = JSON.stringify(data);
 };
 
-Wordle.prototype.load = function() {
+/**
+ * Loads a saved session from local storage
+ */
+Wordle.prototype.loadSession = function() {
 	if (localStorage.wordle) {
 		let data = JSON.parse(localStorage.wordle);
 		let updated = Date.parse(data.updated);
 		if (updated >= this.today) {
-			this.tries = data.tries;
+			this.guesses = data.guesses;
 			return true;
 		}
 	}
 	return false;
 };
 
-Wordle.prototype.word = function() {
+/**
+ * Generates a new word to guess
+ */
+Wordle.prototype.generateWord = function() {
 	let rng = new RNG(+this.today);
 	this.target = this.words[rng.random(0, this.words.length)].toUpperCase();
 	this.letters = {};
@@ -69,28 +95,34 @@ Wordle.prototype.word = function() {
 	}
 };
 
-Wordle.prototype.calculate = function() {
+/**
+ * Checks the game states and derives the known facts. Also, determines if we are in a win or lose state
+ */
+Wordle.prototype.checkGameState = function() {
 	let w = false;
-	for (let i = 0; i < this.tries.length; i++) {
+	for (let i = 0; i < this.guesses.length; i++) {
 		let r = 0;
-		for (let j = 0; j < this.tries[i].length; j++) {
-			this.facts[this.tries[i][j].letter] = Math.max(this.facts[this.tries[i][j].letter] || 0, this.tries[i][j].value);
-			if (this.tries[i][j].value == 2) r++;
+		for (let j = 0; j < this.guesses[i].length; j++) {
+			this.facts[this.guesses[i][j].letter] = Math.max(this.facts[this.guesses[i][j].letter] || 0, this.guesses[i][j].value);
+			if (this.guesses[i][j].value == 2) r++;
 		}
 		if (r >= this.config.letters) w = true;
 	}
 	this.win = w;
-	this.lose = !w && this.tries.length == this.config.tries;
+	this.lose = !w && this.guesses.length == this.config.guesses;
 	if (this.win) {
-		this.openPopup("Partita vinta!<br/>Prossima partita tra <countdown target=\"" + this.tomorrow.toISOString() + "\">" + Countdown.get(this.tomorrow) + "</countdown>", [], true);
+		this.openPopup(this.messages.winGame.replaceAll("{countdown}", "<countdown target=\"" + this.tomorrow.toISOString() + "\">" + Countdown.get(this.tomorrow) + "</countdown>"), [], true);
 	} else if (this.lose) {
-		this.openPopup("Nessun tentativo rimasto!<br/>Riprova tra <countdown target=\"" + this.tomorrow.toISOString() + "\">" + Countdown.get(this.tomorrow) + "</countdown>", [], true);
+		this.openPopup(this.messages.loseGame.replaceAll("{countdown}", "<countdown target=\"" + this.tomorrow.toISOString() + "\">" + Countdown.get(this.tomorrow) + "</countdown>"), [], true);
 	} else {
 		this.closePopup();
 	}
 };
 
-Wordle.prototype.initialize = function() {
+/**
+ * Initializes a new game
+ */
+Wordle.prototype.initializeGame = function() {
 	let now = new Date();
 	let today = new Date(+now);
 	today.setMilliseconds(0);
@@ -101,55 +133,61 @@ Wordle.prototype.initialize = function() {
 	let tomorrow = new Date(+this.today);
 	tomorrow.setDate(tomorrow.getDate() + 1);
 	this.tomorrow = tomorrow;
-	setTimeout(Wordle.prototype.initialize.bind(this), +tomorrow - +now);
-	this.word();
-	let loaded = this.load();
-	if (loaded) this.calculate();
-	this.save();
-	this.redraw();
+	setTimeout(Wordle.prototype.initializeGame.bind(this), +tomorrow - +now);
+	this.generateWord();
+	let loaded = this.loadSession();
+	if (loaded) this.checkGameState();
+	else this.guesses = [];
+	this.saveSession();
+	this.redrawComponents();
 };
 
-Wordle.prototype.enter = function() {
-	console.log("entered word: " + this.entered);
+/**
+ * Verifies a guess and updates the game state
+ */
+Wordle.prototype.enterGuess = function() {
 	if (this.entered.length >= this.config.letters) {
 		let wu = this.entered.toUpperCase();
 		if (this.words.indexOf(wu) < 0) {
-			this.openPopup("Parola non trovata nel dizionario!", [{ label: "OK", action: this.closePopup }]);
+			this.openPopup(this.messages.wordNotFound, [{ label: this.messages.ok, action: this.closePopup }]);
 		} else {
-			let trial = [];
+			let guess = [];
 			let checked = {};
 			for (let i = 0; i < this.config.letters; i++) {
-				trial.push({ letter: wu.charAt(i), value: 0 });
+				guess.push({ letter: wu.charAt(i), value: 0 });
 			}
 			for (let i = 0; i < this.config.letters; i++) {
-				let l = trial[i].letter;
+				let l = guess[i].letter;
 				if (l == this.target.charAt(i)) {
-					trial[i].value = 2;
+					guess[i].value = 2;
 					if (!checked[l]) checked[l] = 1;
 					else checked[l]++;
 				}
 			}
 			for (let i = 0; i < this.config.letters; i++) {
-				let l = trial[i].letter;
-				if (trial[i].value == 0) {
+				let l = guess[i].letter;
+				if (guess[i].value == 0) {
 					let l = wu.charAt(i);
 					if ((this.letters[l] || 0) > (checked[l] || 0)) {
-						trial[i].value = 1;
+						guess[i].value = 1;
 					}
 					if (!checked[l]) checked[l] = 1;
 					else checked[l]++;
 				}
 			}
-			this.tries.push(trial);
+			this.guesses.push(guess);
 			this.entered = "";
-			this.calculate();
-			this.save();
-			this.redraw();
+			this.checkGameState();
+			this.saveSession();
+			this.redrawComponents();
 		}
 	}
 };
 
-Wordle.prototype.bootstrap = function() {
+/**
+ * Creates the visual components, binds the event handlers and initializes the game
+ */
+Wordle.prototype.bootstrapGame = function() {
 	$(this.container).empty();
 	let pop = $("<popup>");
 	this.items.popup.root = pop;
@@ -158,7 +196,7 @@ Wordle.prototype.bootstrap = function() {
 	this.items.popup.content = cnt;
 	$(this.container).append(pop);
 	let wse = $("<words>");
-	for (let i = 0; i < this.config.tries; i++) {
+	for (let i = 0; i < this.config.guesses; i++) {
 		let wi = [];
 		let we = $("<word>");
 		for (let j = 0; j < this.config.letters; j++) {
@@ -184,19 +222,22 @@ Wordle.prototype.bootstrap = function() {
 		kbe.append(re);
 	}
 	$(this.container).append(kbe);
-	$(this.container).on("click", this.click.bind(this));
-	$(document).on("keyup", this.key.bind(this));
-	this.initialize();
+	$(this.container).on("click", this.clickHandler.bind(this));
+	$(document).on("keyup", this.keyPressHandler.bind(this));
+	this.initializeGame();
 };
 
-Wordle.prototype.redraw = function() {
-	for (let i = 0; i < this.config.tries; i++) {
-		if (i < this.tries.length) {
+/**
+ * Updates the visual components after a guess
+ */
+Wordle.prototype.redrawComponents = function() {
+	for (let i = 0; i < this.config.guesses; i++) {
+		if (i < this.guesses.length) {
 			for (let j = 0; j < this.config.letters; j++) {
-				this.items.words[i][j].attr("label", this.tries[i][j].letter);
-				this.items.words[i][j].attr("value", this.tries[i][j].value);
+				this.items.words[i][j].attr("label", this.guesses[i][j].letter);
+				this.items.words[i][j].attr("value", this.guesses[i][j].value);
 			}
-		} else if (i == this.tries.length) {
+		} else if (i == this.guesses.length) {
 			for (let j = 0; j < this.config.letters; j++) {
 				if (j < this.entered.length) {
 					this.items.words[i][j].attr("label", this.entered.charAt(j));
@@ -222,42 +263,55 @@ Wordle.prototype.redraw = function() {
 	}
 };
 
-Wordle.prototype.key = function(e) {
-	if (!this.win && this.tries.length < this.config.tries) {
+/**
+ * Handles a key press on the virtual or physical keyboard
+ */
+Wordle.prototype.keyPressHandler = function(e) {
+	if (!this.win && this.guesses.length < this.config.guesses) {
 		if (this.isPopupOpen() && !this.isPopupFixed()) {
 			this.closePopup();
 		} else {
 			if (e.which == 8) {
-				console.log("pressed backspace key");
 				if (this.entered.length > 0) {
 					this.entered = this.entered.substr(0, this.entered.length - 1);
 				}
 			} else if (e.which == 13) {
-				this.enter();
+				this.enterGuess();
 			} else if (e.which >= 65 && e.which <= 90 || e.which >= 97 && e.which <= 122) {
 				let s = String.fromCharCode(e.which).toUpperCase();
-				console.log("pressed " + s + " key");
 				if (this.entered.length < this.config.letters) {
 					this.entered += s;
 				}
 			}
-			this.redraw();
+			this.redrawComponents();
 		}
 	}
 };
 
+/**
+ * Checks if the popup is open
+ */
 Wordle.prototype.isPopupOpen = function() {
 	return this.items.popup.root.is("[show]");
 }
 
+/**
+ * Checks if the popup is fixed (not-closeable)
+ */
 Wordle.prototype.isPopupFixed = function() {
 	return this.items.popup.root.is("[fixed]");
 }
 
+/**
+ * Closes the popup
+ */
 Wordle.prototype.closePopup = function() {
 	this.items.popup.root.removeAttr("show").removeAttr("fixed");
 };
 
+/**
+ * Opens the popup with given content and buttons
+ */
 Wordle.prototype.openPopup = function(content, buttons, fixed) {
 	this.items.popup.root.removeAttr("fixed");
 	this.items.popup.content.empty();
@@ -273,21 +327,24 @@ Wordle.prototype.openPopup = function(content, buttons, fixed) {
 	this.items.popup.root.attr("show", "");
 };
 
-Wordle.prototype.click = function(e) {
-	if (!this.win && this.tries.length < this.config.tries) { 
+/**
+ * Handles a click on the screen (either to auto-close the popup or to activate the virtual keyboard)
+ */
+Wordle.prototype.clickHandler = function(e) {
+	if (!this.win && this.guesses.length < this.config.guesses) { 
 		let t = $(e.target);
 		if (this.isPopupOpen() && !this.isPopupFixed()) {
 			if (!this.popup.root.contains(t)) {
 				this.closePopup();
 			}
-		} else if (t.closest("key").length > 0) {
-			let k = t.closest("key");
+		} else if (t.closest("keyPressHandler").length > 0) {
+			let k = t.closest("keyPressHandler");
 			if (k.is("[enter]")) {
-				this.key({ which: 13 });
+				this.keyPressHandler({ which: 13 });
 			} else if (k.is("[backspace]")) {
-				this.key({ which: 8 });
+				this.keyPressHandler({ which: 8 });
 			} else {
-				this.key({ which: k.attr("letter").charCodeAt(0) });
+				this.keyPressHandler({ which: k.attr("letter").charCodeAt(0) });
 			}
 		}
 	}
