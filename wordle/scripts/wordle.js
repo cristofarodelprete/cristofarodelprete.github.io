@@ -189,7 +189,7 @@ Wordle.prototype.initializeGame = function() {
 Wordle.prototype.enterGuess = function() {
 	if (this.entered.length >= this.config.letters) {
 		let wu = this.entered.toUpperCase();
-		if (this.words.indexOf(wu) < 0) {
+		if (this.words.indexOf(wu) < 0 && this.filler.indexOf(wu) < 0) {
 			this.openPopup(this.messages.wordNotFound, [{ label: this.messages.ok, action: this.closePopup }]);
 		} else {
 			let guess = [];
