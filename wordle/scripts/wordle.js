@@ -1,7 +1,8 @@
 function Wordle(container, config) {
 	this.container = container;
 	this.config = $.extend({
-		source: "words-5.txt",
+		words: "words-5.txt",
+		filler: "filler-5.txt",
 		guesses: 6,
 		letters: 5,
 		interval: "daily",
@@ -16,6 +17,7 @@ function Wordle(container, config) {
 	this.guesses = [];
 	this.entered = "";
 	this.words = null;
+	this.filler = null;
 	this.keyboard = [
 		[ "Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P" ],
 		[ "A", "S", "D", "F", "G", "H", "J", "K", "L" ],
@@ -40,11 +42,15 @@ function Wordle(container, config) {
  */
 Wordle.prototype.fetchDictionary = function() {
 	$.ajax({
-		url: this.config.source,
+		url: this.config.words,
 		dataType: "text",
 		success: this.prepareWords.bind(this)
 	});
-
+	$.ajax({
+		url: this.config.filler,
+		dataType: "text",
+		success: this.prepareFiller.bind(this)
+	});
 };
 
 /**
@@ -52,7 +58,19 @@ Wordle.prototype.fetchDictionary = function() {
  */
 Wordle.prototype.prepareWords = function(d) {
 	this.words = d.toUpperCase().replaceAll("\r\n", "\n").split("\n");
-	$(document).ready(this.bootstrapGame.bind(this));
+	if (this.words !== null && this.filler !== null) {
+		$(document).ready(this.bootstrapGame.bind(this));
+	}
+};
+
+/**
+ * Imports the filler words from the dictionary to memory
+ */
+Wordle.prototype.prepareFiller = function(d) {
+	this.filler = d.toUpperCase().replaceAll("\r\n", "\n").split("\n");
+	if (this.words !== null && this.filler !== null) {
+		$(document).ready(this.bootstrapGame.bind(this));
+	}
 };
 
 /**
