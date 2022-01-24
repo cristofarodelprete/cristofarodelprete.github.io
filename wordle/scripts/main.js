@@ -1,5 +1,6 @@
 var wordle = new Wordle("main", {
-	source: "resources/words-5.txt",
+	words: "resources/words-5.txt",
+	filler: "resources/filler-5.txt",
 	letters: 5,
 	tries: 6,
 	interval: "hourly",
